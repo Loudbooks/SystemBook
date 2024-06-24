@@ -19,7 +19,7 @@ struct ProcessCardView: View, Identifiable {
 
     private var backgroundColor: Color {
         if colorScheme == .dark {
-            return Color(.secondarySystemFill)
+            return Color(.secondarySystemGroupedBackground)
         } else {
             return .white
         }
@@ -154,7 +154,7 @@ struct ProcessCardView: View, Identifiable {
                 impactMed.impactOccurred()
             }
 
-            withAnimation(.easeInOut(duration: 0.5)) {
+            withAnimation(.easeInOut(duration: 0.3)) {
                 isTapped = true
             }
         } onRelease: {
