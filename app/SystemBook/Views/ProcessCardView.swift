@@ -33,7 +33,6 @@ struct ProcessCardView: View, Identifiable {
                         .frame(width: 6, height: 6)
                         .background(Color(red: 0.24, green: 0.82, blue: 0.03))
                         .cornerRadius(23)
-                        .offset(x: 0, y: 3)
                         .padding(.trailing, 30)
                 }
                 .padding(.leading, 30)
