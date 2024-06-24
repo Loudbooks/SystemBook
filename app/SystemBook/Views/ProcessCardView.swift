@@ -13,6 +13,9 @@ struct ProcessCardView: View, Identifiable {
     let runningTime: String
     
     @Environment(\.colorScheme) var colorScheme
+    
+    @State private var isTapped = false;
+    @State private var isButtonTapped = false;
 
     private var backgroundColor: Color {
         if colorScheme == .dark {
@@ -90,38 +93,50 @@ struct ProcessCardView: View, Identifiable {
                     
                     HStack(spacing: 22) {
                         if enabled {
-                            Button {
-                                
-                            } label: {
+                            Button {} label: {
                                 Text("Disable")
                                     .font(.caption)
                                     .fontWeight(.bold)
                             }
+                            .pressEvents {
+                                isButtonTapped = true
+                            } onRelease: {
+                                isButtonTapped = false
+                            }
                         } else {
-                            Button {
-                                
-                            } label: {
+                            Button {} label: {
                                 Text("Enable")
                                     .font(.caption)
                                     .fontWeight(.bold)
                             }
+                            .pressEvents {
+                                isButtonTapped = true
+                            } onRelease: {
+                                isButtonTapped = false
+                            }
                         }
                         
                         if running {
-                            Button {
-                                
-                            } label: {
+                            Button {} label: {
                                 Text("Stop")
                                     .font(.caption)
                                     .fontWeight(.bold)
                             }
+                            .pressEvents {
+                                isButtonTapped = true
+                            } onRelease: {
+                                isButtonTapped = false
+                            }
                         } else {
-                            Button {
-                                
-                            } label: {
+                            Button {} label: {
                                 Text("Start")
                                     .font(.caption)
                                     .fontWeight(.bold)
+                            }
+                            .pressEvents {
+                                isButtonTapped = true
+                            } onRelease: {
+                                isButtonTapped = false
                             }
                         }
                     }.padding(.trailing, 30)
@@ -131,6 +146,21 @@ struct ProcessCardView: View, Identifiable {
             }
             .padding([.top, .leading], 0)
             .frame(maxHeight: 116)
+        }
+        .scaleEffect(isTapped && !isButtonTapped ? 0.95 : 1.0)
+        .pressEvents {
+            if !isTapped {
+                let impactMed = UIImpactFeedbackGenerator(style: .soft)
+                impactMed.impactOccurred()
+            }
+
+            withAnimation(.easeInOut(duration: 0.5)) {
+                isTapped = true
+            }
+        } onRelease: {
+            withAnimation {
+                isTapped = false
+            }
         }
     }
 }
