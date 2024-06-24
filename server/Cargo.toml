@@ -1,0 +1,20 @@
+[package]
+name = "SystemBook"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rocket = { version = "0.5.1", features = ["json", "serde_json"] }
+systemd = "0.10.0"
+systemctl = "0.3.1"
+dbus = "0.9.7"
+serde = { version = "1.0.203", features = ["derive"] }
+futures-util = "0.3.30"
+tokio = "1.38.0"
+tokio-tungstenite = "0.23.1"
+async-trait = "0.1.80"
+
+[dependencies.rocket_contrib]
+version = "0.4.11"
+default-features = false
+features = ["json"]
