@@ -10,12 +10,22 @@ struct ProcessCardView: View, Identifiable {
     let memory: String
     let runningTime: String
     
+    @Environment(\.colorScheme) var colorScheme
+
+    private var backgroundColor: Color {
+        if colorScheme == .dark {
+            return Color(.secondarySystemFill)
+        } else {
+            return .white
+        }
+    }
+    
     var body: some View {
         ZStack() {
             Rectangle()
                 .foregroundColor(.clear)
                 .frame(width: 372, height: 116)
-                .background(.white)
+                .background(backgroundColor)
                 .cornerRadius(23)
                 .offset(x: 0, y: 0)
                 .shadow(
@@ -27,7 +37,7 @@ struct ProcessCardView: View, Identifiable {
                     Text(title)
                         .font(.title2)
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
                     Ellipse()
                         .foregroundColor(.clear)
                         .frame(width: 6, height: 6)
