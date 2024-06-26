@@ -43,9 +43,13 @@ struct ProcessCardView: View {
                     Spacer()
                     Button {
                         if favorites.contains(id: process.title) {
-                            favorites.remove(id: process.title)
+                            withAnimation {
+                                favorites.remove(id: process.title)
+                            }
                         } else {
-                            favorites.add(id: process.title)
+                            withAnimation {
+                                favorites.add(id: process.title)
+                            }
                         }
                         
                         executeButtonHaptics()

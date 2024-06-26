@@ -24,6 +24,7 @@ struct ContentView: View {
         } else {
             return exampleProcesses.filter { $0.title.contains(searchText) || $0.description.contains(searchText) }
         }
+        
     }
     
     var body: some View {
@@ -42,26 +43,30 @@ struct ContentView: View {
                 .listRowSeparator(.hidden)
                 
                 if filteredFavorites.count > 0 {
-                    Divider()
+                    Divider().zIndex(-1)
                 }
-                ForEach(filteredProcesses) { process in
-                    NavigationLink(destination: ProcessDetailsView(process: process)) {
-                        ProcessCardView(process: process)
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
-                            .padding(.vertical, 4)
-                            .environment(favorites)
+                
+                let unfavorated = filteredProcesses.filter({ !favorites.contains(id: $0.title) })
+                
+                withAnimation {
+                    ForEach(unfavorated) { process in
+                        NavigationLink(destination: ProcessDetailsView(process: process)) {
+                            ProcessCardView(process: process)
+                                .listRowInsets(EdgeInsets())
+                                .listRowBackground(Color.clear)
+                                .padding(.vertical, 4)
+                                .environment(favorites)
+                        }
                     }
+                    .listRowSeparator(.hidden)
                 }
-                .listRowSeparator(.hidden)
             }
             .searchable(text: $searchText, prompt: "Search processes")
             .navigationTitle("Processes")
-            .toolbar {
-                EditButton()
-            }
+            
         }
-        .accentColor(.blue)    }
+        .accentColor(.blue)
+    }
 }
 
 
