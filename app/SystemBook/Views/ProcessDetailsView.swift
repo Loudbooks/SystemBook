@@ -56,6 +56,33 @@ sd
             .padding(.leading, 20)
             
             HStack(spacing: 22) {
+                if process.running {
+                    Button {} label: {
+                        Text("Stop")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
+                    .pressEvents {
+                        isButtonTapped = true
+                        executeButtonHaptics()
+                    } onRelease: {
+                        isButtonTapped = false
+                        executeButtonHaptics()
+                    }
+                } else {
+                    Button {} label: {
+                        Text("Start")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
+                    .pressEvents {
+                        isButtonTapped = true
+                        executeButtonHaptics()
+                    } onRelease: {
+                        isButtonTapped = false
+                        executeButtonHaptics()
+                    }
+                }
                 if process.enabled {
                     Button {} label: {
                         Text("Disable")
@@ -84,33 +111,6 @@ sd
                     }
                 }
                 
-                if process.running {
-                    Button {} label: {
-                        Text("Stop")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
-                    .pressEvents {
-                        isButtonTapped = true
-                        executeButtonHaptics()
-                    } onRelease: {
-                        isButtonTapped = false
-                        executeButtonHaptics()
-                    }
-                } else {
-                    Button {} label: {
-                        Text("Start")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
-                    .pressEvents {
-                        isButtonTapped = true
-                        executeButtonHaptics()
-                    } onRelease: {
-                        isButtonTapped = false
-                        executeButtonHaptics()
-                    }
-                }
                 Spacer()
             }
             .padding(.leading, 20)
