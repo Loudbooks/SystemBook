@@ -12,13 +12,13 @@ struct ButtonPress: ViewModifier {
         content
             .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
+                    .onChanged({_ in
+                        onPress()
+                    })
                     .onEnded({_ in
                         onRelease()
                     })
             )
-            .onTapGesture {
-                onPress()
-            }
     }
 }
 

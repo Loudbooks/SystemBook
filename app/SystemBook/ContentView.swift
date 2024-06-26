@@ -3,6 +3,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var favorites = Favorites()
+
     @State private var searchText = ""
 
     let exampleProcesses = [
@@ -25,23 +27,41 @@ struct ContentView: View {
     }
     
     var body: some View {
-//        NavigationStack {
-//            ScrollView {
-//                ForEach(filteredProcesses) { process in
-//                    ProcessCardView(process: process)
-//                        .listRowInsets(EdgeInsets())
-//                        .listRowBackground(Color.clear)
-//                        .padding(.vertical, 4)
-//                }
-//                .listRowSeparator(.hidden)
-//            }
-//            .searchable(text: $searchText, prompt: "Search processes")
-//            .navigationTitle("Processes")
-//        }
-//        .accentColor(.blue)
-        
-        ProcessDetailsView(process: exampleProcesses[0])
-    }
+        NavigationStack {
+            ScrollView {
+                let filteredFavorites = filteredProcesses.filter({ favorites.contains(id: $0.title) })
+                ForEach(filteredFavorites) { process in
+                    NavigationLink(destination: ProcessDetailsView(process: process)) {
+                        ProcessCardView(process: process)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .padding(.vertical, 4)
+                            .environment(favorites)
+                    }
+                }
+                .listRowSeparator(.hidden)
+                
+                if filteredFavorites.count > 0 {
+                    Divider()
+                }
+                ForEach(filteredProcesses) { process in
+                    NavigationLink(destination: ProcessDetailsView(process: process)) {
+                        ProcessCardView(process: process)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .padding(.vertical, 4)
+                            .environment(favorites)
+                    }
+                }
+                .listRowSeparator(.hidden)
+            }
+            .searchable(text: $searchText, prompt: "Search processes")
+            .navigationTitle("Processes")
+            .toolbar {
+                EditButton()
+            }
+        }
+        .accentColor(.blue)    }
 }
 
 

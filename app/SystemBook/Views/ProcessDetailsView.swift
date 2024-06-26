@@ -140,6 +140,7 @@ sd
                                 .clipped()
                                 .textSelection(.enabled)
                         }
+                        .clipped()
                         .defaultScrollAnchor(.bottom)
                         
                         Spacer()

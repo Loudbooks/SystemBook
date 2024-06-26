@@ -6,8 +6,7 @@ struct ProcessCardView: View {
     let process: Process;
     
     @Environment(\.colorScheme) var colorScheme
-    
-    @State private var isButtonTapped = false;
+    @Environment(Favorites.self) var favorites
     
     private var backgroundColor: Color {
         if colorScheme == .dark {
@@ -41,6 +40,23 @@ struct ProcessCardView: View {
                         .background(Color(red: 0.24, green: 0.82, blue: 0.03))
                         .cornerRadius(23)
                         .padding(.trailing, 30)
+                    Spacer()
+                    Button {
+                        if favorites.contains(id: process.title) {
+                            favorites.remove(id: process.title)
+                        } else {
+                            favorites.add(id: process.title)
+                        }
+                        
+                        executeButtonHaptics()
+                    } label: {
+                        let glyph = favorites.contains(id: process.title) ? "star.fill" : "star"
+                        
+                        Image(systemName: glyph)
+                            .padding(.trailing, 30)
+                            .symbolRenderingMode(favorites.contains(id: process.title) ? .multicolor : .monochrome)
+                            .foregroundStyle(.black)
+                    }
                 }
                 .padding(.leading, 30)
                 .padding(.top, 17)
@@ -85,58 +101,38 @@ struct ProcessCardView: View {
                     
                     HStack(spacing: 22) {
                         if process.enabled {
-                            Button {} label: {
+                            Button {
+                                executeButtonHaptics()
+                            } label: {
                                 Text("Disable")
                                     .font(.caption)
                                     .fontWeight(.bold)
                             }
-                            .pressEvents {
-                                isButtonTapped = true
-                                executeButtonHaptics()
-                            } onRelease: {
-                                isButtonTapped = false
-                                executeButtonHaptics()
-                            }
                         } else {
-                            Button {} label: {
+                            Button {
+                                executeButtonHaptics()
+                            } label: {
                                 Text("Enable")
                                     .font(.caption)
                                     .fontWeight(.bold)
                             }
-                            .pressEvents {
-                                isButtonTapped = true
-                                executeButtonHaptics()
-                            } onRelease: {
-                                isButtonTapped = false
-                                executeButtonHaptics()
-                            }
                         }
                         
                         if process.running {
-                            Button {} label: {
+                            Button {
+                                executeButtonHaptics()
+                            } label: {
                                 Text("Stop")
                                     .font(.caption)
                                     .fontWeight(.bold)
                             }
-                            .pressEvents {
-                                isButtonTapped = true
-                                executeButtonHaptics()
-                            } onRelease: {
-                                isButtonTapped = false
-                                executeButtonHaptics()
-                            }
                         } else {
-                            Button {} label: {
+                            Button {
+                                executeButtonHaptics()
+                            } label: {
                                 Text("Start")
                                     .font(.caption)
                                     .fontWeight(.bold)
-                            }
-                            .pressEvents {
-                                isButtonTapped = true
-                                executeButtonHaptics()
-                            } onRelease: {
-                                isButtonTapped = false
-                                executeButtonHaptics()
                             }
                         }
                     }.padding(.trailing, 30)
@@ -147,28 +143,20 @@ struct ProcessCardView: View {
             .padding([.top, .leading], 0)
             .frame(maxHeight: 116)
         }
-        .pressEvents {
-            if !isButtonTapped {
-                let impactMed = UIImpactFeedbackGenerator(style: .soft)
-                impactMed.impactOccurred()
-            }
-        } onRelease: {
-        }
     }
     
     func executeButtonHaptics() {
-        if !isButtonTapped {
-            let impactMed = UIImpactFeedbackGenerator(style: .rigid)
+        let impactMed = UIImpactFeedbackGenerator(style: .rigid)
+        impactMed.impactOccurred()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
             impactMed.impactOccurred()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                impactMed.impactOccurred()
-            })
-        }
+        })
     }
 }
 
 #Preview {
     ProcessCardView(process:
                         Process(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"))
+    .environment(Favorites())
 }
