@@ -2,21 +2,13 @@
 
 import SwiftUI
 
-struct ProcessCardView: View, Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let running: Bool
-    let enabled: Bool
-    let cpu: Double
-    let memory: String
-    let runningTime: String
+struct ProcessCardView: View {
+    let process: Process;
     
     @Environment(\.colorScheme) var colorScheme
     
-    @State private var isTapped = false;
     @State private var isButtonTapped = false;
-
+    
     private var backgroundColor: Color {
         if colorScheme == .dark {
             return Color(.secondarySystemGroupedBackground)
@@ -39,7 +31,7 @@ struct ProcessCardView: View, Identifiable {
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text(title)
+                    Text(process.title)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
@@ -54,7 +46,7 @@ struct ProcessCardView: View, Identifiable {
                 .padding(.top, 17)
                 
                 HStack {
-                    Text(description)
+                    Text(process.description)
                         .font(.caption2)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                 }.padding(.leading, 30)
@@ -66,16 +58,16 @@ struct ProcessCardView: View, Identifiable {
                         Image(systemName: "cpu")
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
                             .font(.caption2)
-                        Text(cpu.description + "%")
+                        Text(process.cpu.description + "%")
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                             .font(.system(size: 9, weight: .regular, design: .default))
                     }
-                                        
+                    
                     HStack (spacing: 2){
                         Image(systemName: "memorychip")
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
                             .font(.caption2)
-                        Text(memory)
+                        Text(process.memory)
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                             .font(.system(size: 9, weight: .regular, design: .default))
                     }
@@ -84,7 +76,7 @@ struct ProcessCardView: View, Identifiable {
                         Image(systemName: "timer")
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
                             .font(.caption2)
-                        Text(runningTime)
+                        Text(process.runningTime)
                             .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                             .font(.system(size: 9, weight: .regular, design: .default))
                     }
@@ -92,7 +84,7 @@ struct ProcessCardView: View, Identifiable {
                     Spacer()
                     
                     HStack(spacing: 22) {
-                        if enabled {
+                        if process.enabled {
                             Button {} label: {
                                 Text("Disable")
                                     .font(.caption)
@@ -100,8 +92,10 @@ struct ProcessCardView: View, Identifiable {
                             }
                             .pressEvents {
                                 isButtonTapped = true
+                                executeButtonHaptics()
                             } onRelease: {
                                 isButtonTapped = false
+                                executeButtonHaptics()
                             }
                         } else {
                             Button {} label: {
@@ -111,12 +105,14 @@ struct ProcessCardView: View, Identifiable {
                             }
                             .pressEvents {
                                 isButtonTapped = true
+                                executeButtonHaptics()
                             } onRelease: {
                                 isButtonTapped = false
+                                executeButtonHaptics()
                             }
                         }
                         
-                        if running {
+                        if process.running {
                             Button {} label: {
                                 Text("Stop")
                                     .font(.caption)
@@ -124,8 +120,10 @@ struct ProcessCardView: View, Identifiable {
                             }
                             .pressEvents {
                                 isButtonTapped = true
+                                executeButtonHaptics()
                             } onRelease: {
                                 isButtonTapped = false
+                                executeButtonHaptics()
                             }
                         } else {
                             Button {} label: {
@@ -135,8 +133,10 @@ struct ProcessCardView: View, Identifiable {
                             }
                             .pressEvents {
                                 isButtonTapped = true
+                                executeButtonHaptics()
                             } onRelease: {
                                 isButtonTapped = false
+                                executeButtonHaptics()
                             }
                         }
                     }.padding(.trailing, 30)
@@ -147,24 +147,28 @@ struct ProcessCardView: View, Identifiable {
             .padding([.top, .leading], 0)
             .frame(maxHeight: 116)
         }
-        .scaleEffect(isTapped && !isButtonTapped ? 0.95 : 1.0)
         .pressEvents {
-            if !isTapped {
+            if !isButtonTapped {
                 let impactMed = UIImpactFeedbackGenerator(style: .soft)
                 impactMed.impactOccurred()
             }
-
-            withAnimation(.easeInOut(duration: 0.3)) {
-                isTapped = true
-            }
         } onRelease: {
-            withAnimation {
-                isTapped = false
-            }
+        }
+    }
+    
+    func executeButtonHaptics() {
+        if !isButtonTapped {
+            let impactMed = UIImpactFeedbackGenerator(style: .rigid)
+            impactMed.impactOccurred()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                impactMed.impactOccurred()
+            })
         }
     }
 }
 
 #Preview {
-    ProcessCardView(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h")
+    ProcessCardView(process:
+                        Process(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"))
 }

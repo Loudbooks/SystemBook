@@ -6,17 +6,17 @@ struct ContentView: View {
     @State private var searchText = ""
 
     let exampleProcesses = [
-        ProcessCardView(title: "Testing", description: "Descipriotn test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Huh", description: "aaa test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Another process", description: "asdasd test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Process4", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Process2", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Process1", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        ProcessCardView(title: "Process3", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h")
+        Process(title: "Testing", description: "Descipriotn test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Huh", description: "aaa test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Another process", description: "asdasd test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Process4", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Process2", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Process1", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
+        Process(title: "Process3", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h")
     ]
     
-    var filteredProcesses: [ProcessCardView] {
+    var filteredProcesses: [Process] {
         if searchText.isEmpty {
             return exampleProcesses
         } else {
@@ -25,20 +25,22 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                ForEach(filteredProcesses) { process in
-                    process
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
-                        .padding(.vertical, 4)
-                }
-                .listRowSeparator(.hidden)
-            }
-            .searchable(text: $searchText, prompt: "Search processes")
-            .navigationTitle("Processes")
-        }
-        .accentColor(.blue)
+//        NavigationStack {
+//            ScrollView {
+//                ForEach(filteredProcesses) { process in
+//                    ProcessCardView(process: process)
+//                        .listRowInsets(EdgeInsets())
+//                        .listRowBackground(Color.clear)
+//                        .padding(.vertical, 4)
+//                }
+//                .listRowSeparator(.hidden)
+//            }
+//            .searchable(text: $searchText, prompt: "Search processes")
+//            .navigationTitle("Processes")
+//        }
+//        .accentColor(.blue)
+        
+        ProcessDetailsView(process: exampleProcesses[0])
     }
 }
 
