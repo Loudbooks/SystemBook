@@ -71,7 +71,7 @@ impl Process {
             cpu
         };
         
-        cpu_str.replace("min", "m,").replace("  ", "");
+        cpu_str.replace("min", "m,").replace("  ", "")
     }
 
     fn cleanup_time(time: String) -> String {
