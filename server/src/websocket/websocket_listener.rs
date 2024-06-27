@@ -12,6 +12,7 @@ lazy_static! {
     static ref LIST_HANDLER: AsyncOnce<ListHandler> = AsyncOnce::new(async {
         let listener = ListHandler::new();
         let mut async_listener = listener.clone();
+        async_listener.gather_processes().await;
         
         tokio::spawn(async move {
             async_listener.begin_listening().await;
