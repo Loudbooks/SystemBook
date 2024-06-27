@@ -19,7 +19,7 @@ async fn main() {
         let mut ws_server = WebsocketServer::new(
             tokio_tungstenite::accept_async(stream)
                 .await
-                .expect("Failed to accept connection"), &basic_listener).await;
+                .expect("Failed to accept connection"), &basic_listener);
 
         ws_server.listen().await;
     }
