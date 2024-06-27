@@ -1,27 +1,21 @@
-use dbus::ffidisp::Connection;
-use rocket::{get, launch, routes};
-use rocket::serde::json::Json;
-use crate::process::Process;
+use tokio::net::TcpListener;
+use crate::websocket::websocket_listener::BasicListener;
+use crate::websocket::websocket_server::WebsocketServer;
 
-mod dbus_collector;
-mod process;
 mod websocket;
+mod collectors;
+mod data;
 
-#[get("/")]
-fn index() -> Json<Vec<Process>> {
-    let connection = Connection::new_system().expect("Failed to connect to D-Bus");
+#[tokio::main]
+async fn main() {
+    let addr = "127.0.0.1:9002";
+    let listener = TcpListener::bind(&addr).await.expect("Failed to bind to address");
 
-    let start = std::time::Instant::now();
-    let processes = dbus_collector::gather_processes(&connection);
-    
-    println!("Gathered {} processes in {:?}", processes.len(), start.elapsed());
-    
-    println!("{:?}", Json(processes));
+    println!("Listening on: {}", addr);
 
-    Json(processes)
-}
+    while let Ok((stream, _)) = listener.accept().await {
+        let mut ws_server = WebsocketServer::new(stream, Box::new(BasicListener {})).await;
 
-#[launch]
-fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+        ws_server.listen().await;
+    }
 }

@@ -17,8 +17,7 @@ pub trait WebsocketListener {
 impl WebsocketServer {
     pub(crate) async fn new(stream: TcpStream, listener: Box<dyn WebsocketListener>) -> Box<WebsocketServer> {
         let ws_stream = tokio_tungstenite::accept_async(stream).await.expect("Error during the websocket handshake");
-
-
+        
         Box::new(WebsocketServer {
             stream: ws_stream,
             listener
@@ -27,7 +26,10 @@ impl WebsocketServer {
 
     pub(crate) async fn send_message(&mut self, message: String) {
         let write = &mut self.stream;
-        write.send(Message::Text(message)).await.expect("Failed to send message");
+        match write.send(Message::Text(message)).await {
+            Ok(_) => {}
+            Err(e) => {println!("Failed to send message: {:?}", e); eprintln!("Failed to send message: {:?}", e)}
+        }
     }
 
     pub(crate) async fn listen(&mut self) {

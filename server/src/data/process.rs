@@ -1,9 +1,8 @@
 use serde::Serialize;
 use systemctl::{AutoStartStatus, Unit};
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Process {
-    pub pid: u64,
     pub description: String,
     pub name: String,
     pub running: bool,
@@ -14,7 +13,6 @@ pub struct Process {
 
 impl Process {
     pub fn from_unit(unit: Unit) -> Self {
-        let pid = unit.pid.unwrap_or(0);
         let name = unit.name.clone();
         let description = unit.description.clone().unwrap_or("No Description Provided".to_string());
         let enabled = unit.auto_start == AutoStartStatus::Enabled;
@@ -23,7 +21,6 @@ impl Process {
         let cpu = unit.cpu.unwrap_or("None".to_string());
 
         Self {
-            pid,
             name,
             description,
             running,
