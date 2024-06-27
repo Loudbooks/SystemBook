@@ -31,12 +31,15 @@ impl ListHandler {
     }
 
     pub fn get_list(&self) -> serde_json::Value {
+    	println!("About to send: {:?}", self.list.lock().unwrap().clone());
+
+    
         let dto = ListDTO {
-            checked: self.last_checked.clone().lock().unwrap().clone(),
-            processes: self.list.clone().lock().unwrap().clone(),
+            checked: self.last_checked.lock().unwrap().clone(),
+            processes: self.list.lock().unwrap().clone(),
         };
 
-        serde_json::to_value(&dto).unwrap_or(serde_json::Value::Null)
+        serde_json::to_value(&dto).unwrap()
     }
 
     pub async fn begin_listening(&mut self) {
@@ -44,11 +47,24 @@ impl ListHandler {
 
         loop {
             interval.tick().await;
-
             let processes = gather_processes(&self.connection.lock().unwrap()).unwrap_or_default();
 
-            self.last_checked = Arc::new(Mutex::new(tokio::time::Instant::now().elapsed().as_secs()));
-            self.list = Arc::new(Mutex::new(processes));
+			println!("Debug1");
+
+            let mut last_checked_state = self.last_checked.lock().unwrap();
+            			println!("Debug2");
+            *last_checked_state = tokio::time::Instant::now().elapsed().as_secs();
+			println!("Debug3");
+
+			let mut list_state = self.list.lock().unwrap();
+						println!("Debug4");
+            *list_state = processes;
+            println!("debug5");
+
+            println!("Set list");
+            println!("debug6");
         }
     }
+
+    
 }
