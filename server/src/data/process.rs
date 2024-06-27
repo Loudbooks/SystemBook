@@ -20,6 +20,19 @@ impl Process {
         let description = unit.description.clone().unwrap_or("No Description Provided".to_string());
         let enabled = unit.auto_start == AutoStartStatus::Enabled;
         let running = unit.is_active().unwrap_or(false);
+
+        if !running {
+            return Self {
+                name,
+                description,
+                running,
+                enabled,
+                memory: "None".to_string(),
+                time: "None".to_string(),
+                cpu: "None".to_string()
+            }
+        }
+
         let memory = unit.memory.unwrap_or("None".to_string());
         let cpu = match unit.cpu {
             None => {
@@ -29,7 +42,8 @@ impl Process {
                 Self::cleanup_cpu(cpu)
             }
         };
-        let time = runtime_collector::get_process_runtime(unit.pid.unwrap_or(0) as i32).unwrap_or("None".to_string());
+        let time = Self::cleanup_time(runtime_collector::get_process_runtime(unit.pid.unwrap_or(0) as i32).unwrap_or("None".to_string()));
+
 
         Self {
             name,
@@ -41,7 +55,7 @@ impl Process {
             cpu
         }
     }
-    
+
     fn cleanup_cpu(cpu: String) -> String {
         return if let Some(pos) = cpu.find('s') {
             if let Some(space_pos) = cpu[..pos].rfind(' ') {
@@ -56,5 +70,9 @@ impl Process {
         } else {
             cpu
         }
+    }
+    
+    fn cleanup_time(time: String) -> String {
+        return time.replace("days", "d").replace("day", "d").replace("hours", "h").replace("hour", "h").replace("minutes", "m").replace("minute", "m");
     }
 }
