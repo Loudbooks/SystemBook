@@ -73,6 +73,6 @@ impl Process {
     }
     
     fn cleanup_time(time: String) -> String {
-        return time.replace("days", "d").replace("day", "d").replace("hours", "h").replace("hour", "h").replace("minutes", "m").replace("minute", "m");
+        return time.replace(" days", "d").replace(" day", "d").replace(" hours", "h").replace(" hour", "h").replace(" minutes", "m").replace(" minute", "m");
     }
 }
