@@ -1,6 +1,6 @@
 use tokio::net::TcpListener;
 use crate::websocket::websocket_listener::BasicListener;
-use crate::websocket::websocket_server::WebsocketServer;
+use crate::websocket::websocket_server::{WebsocketListener, WebsocketServer};
 
 mod websocket;
 mod collectors;
@@ -13,7 +13,7 @@ async fn main() {
 
     println!("Listening on: {}", addr);
     
-    let basic_listener = Box::new(BasicListener {});
+    let basic_listener: Box<dyn WebsocketListener> = Box::new(BasicListener {});
 
     while let Ok((stream, _)) = listener.accept().await {
         let mut ws_server = WebsocketServer::new(
