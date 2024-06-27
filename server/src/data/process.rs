@@ -57,7 +57,7 @@ impl Process {
     }
 
     fn cleanup_cpu(cpu: String) -> String {
-        return if let Some(pos) = cpu.find('s') {
+        let cpu_str = if let Some(pos) = cpu.find('s') {
             if let Some(space_pos) = cpu[..pos].rfind(' ') {
                 let seconds_str = &cpu[space_pos + 1..pos];
                 let mut seconds: f64 = seconds_str.parse().map_or(0.0, |x| x);
@@ -69,9 +69,11 @@ impl Process {
             }
         } else {
             cpu
-        }
+        };
+        
+        cpu_str.replace(" ", ", ").replace("min", "m")
     }
-    
+
     fn cleanup_time(time: String) -> String {
         return time.replace(" days", "d").replace(" day", "d").replace(" hours", "h").replace(" hour", "h").replace(" minutes", "m").replace(" minute", "m");
     }
