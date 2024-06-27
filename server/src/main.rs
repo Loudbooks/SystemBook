@@ -12,9 +12,11 @@ async fn main() {
     let listener = TcpListener::bind(&addr).await.expect("Failed to bind to address");
 
     println!("Listening on: {}", addr);
+    
+    let basic_listener = Box::new(BasicListener {});
 
     while let Ok((stream, _)) = listener.accept().await {
-        let mut ws_server = WebsocketServer::new(stream, Box::new(BasicListener {})).await;
+        let mut ws_server = WebsocketServer::new(stream, basic_listener).await;
 
         ws_server.listen().await;
     }
