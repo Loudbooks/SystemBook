@@ -3,6 +3,7 @@ use std::io;
 use std::io::Read;
 use procfs::process::Process;
 use std::time::{SystemTime, UNIX_EPOCH};
+use procfs::WithCurrentSystemInfo;
 
 fn get_uptime() -> io::Result<f64> {
     let mut file = File::open("/proc/uptime")?;
@@ -14,7 +15,7 @@ fn get_uptime() -> io::Result<f64> {
 
 pub fn get_process_runtime(pid: i32) -> Option<String> {
     if let Ok(process) = Process::new(pid) {
-        if let Ok(start_time) = process.stat().unwrap().starttime() {
+        if let Ok(start_time) = process.stat().unwrap().starttime().get() {
             if let Ok(uptime) = get_uptime() {
                 let boot_time = SystemTime::now() - std::time::Duration::from_secs_f64(uptime);
                 let boot_time_secs = boot_time
@@ -22,7 +23,7 @@ pub fn get_process_runtime(pid: i32) -> Option<String> {
                     .unwrap_or_default()
                     .as_secs();
 
-                let process_start_time = boot_time_secs + (start_time / procfs::ticks_per_second());
+                let process_start_time = boot_time_secs + (start_time.timestamp() as u64 / procfs::ticks_per_second());
 
                 let runtime = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
