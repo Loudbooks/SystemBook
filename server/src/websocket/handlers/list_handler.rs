@@ -47,18 +47,18 @@ impl ListHandler {
 
         loop {
             interval.tick().await;
-            
+
             self.gather_processes().await;
         }
     }
-    
-    pub(crate) async fn gather_processes(&self) -> Vec<Process> {
+
+    pub(crate) async fn gather_processes(&self) {
         let processes = gather_processes(&self.connection.lock().unwrap()).unwrap_or_default();
 
         let mut last_checked_state = self.last_checked.lock().unwrap();
         *last_checked_state = tokio::time::Instant::now().elapsed().as_secs();
 
         let mut list_state = self.list.lock().unwrap();
-        *list_state = processes;(&self.connection.lock().unwrap()).unwrap_or_default()
+        *list_state = processes;
     }
 }
