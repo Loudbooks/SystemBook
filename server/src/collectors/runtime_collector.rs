@@ -12,9 +12,9 @@ fn get_uptime() -> io::Result<f64> {
     Ok(uptime)
 }
 
-fn get_process_runtime(pid: i32) -> Option<u64> {
+pub fn get_process_runtime(pid: i32) -> Option<String> {
     if let Ok(process) = Process::new(pid) {
-        if let Ok(start_time) = process.stat().starttime() {
+        if let Ok(start_time) = process.stat().unwrap().starttime() {
             if let Ok(uptime) = get_uptime() {
                 let boot_time = SystemTime::now() - std::time::Duration::from_secs_f64(uptime);
                 let boot_time_secs = boot_time
