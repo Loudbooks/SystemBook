@@ -1,20 +1,20 @@
+use std::io;
 use dbus::ffidisp::Connection;
 use dbus::Message;
 use systemctl::Unit;
+use crate::data::process::Process;
 
-use crate::process::Process;
-
-pub fn gather_processes(connection: &Connection) -> Vec<Process> {
+pub fn gather_processes(connection: &Connection) -> Result<Vec<Process>, dbus::Error> {
     let msg = Message::new_method_call(
         "org.freedesktop.systemd1",
         "/org/freedesktop/systemd1",
         "org.freedesktop.systemd1.Manager",
         "ListUnits",
-    ).expect("Failed to create method call");
+    ).unwrap();
 
-    let reply = connection.send_with_reply_and_block(msg, 2000).expect("Failed to get reply");
+    let reply = connection.send_with_reply_and_block(msg, 2000)?;
 
-    let units: Vec<(String, String)> = reply.read1().expect("Failed to read reply");
+    let units: Vec<(String, String)> = reply.read1()?;
     
     let mut failed_units = 0;
     let processes: Vec<Process> = units
@@ -35,5 +35,10 @@ pub fn gather_processes(connection: &Connection) -> Vec<Process> {
         eprintln!("Failed to create {} units", failed_units);
     }
 
-    processes
+    Ok(processes)
+}
+
+pub fn get_unit(name: String) -> Result<Unit, io::Error> {
+    let unit = Unit::from_systemctl(&name)?;
+    Ok(unit)
 }

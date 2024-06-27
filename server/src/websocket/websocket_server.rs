@@ -4,9 +4,9 @@ use tokio::net::TcpStream;
 use tokio_tungstenite::tungstenite::Message;
 use tokio_tungstenite::WebSocketStream;
 
-pub(crate) struct WebsocketServer {
+pub(crate) struct WebsocketServer<'a> {
     stream: WebSocketStream<TcpStream>,
-    listener: Box<dyn WebsocketListener>
+    listener: &'a Box<dyn WebsocketListener + 'a>
 }
 
 #[async_trait]
@@ -14,20 +14,20 @@ pub trait WebsocketListener {
     async fn handle_message(&self, message: &Message) -> String;
 }
 
-impl WebsocketServer {
-    pub(crate) async fn new(stream: TcpStream, listener: Box<dyn WebsocketListener>) -> Box<WebsocketServer> {
-        let ws_stream = tokio_tungstenite::accept_async(stream).await.expect("Error during the websocket handshake");
-
-
-        Box::new(WebsocketServer {
-            stream: ws_stream,
-            listener
-        })
+impl<'a> WebsocketServer<'a> {
+    pub(crate) fn new(stream: WebSocketStream<TcpStream>, listener: &'a Box<dyn WebsocketListener + 'a>) -> Self {
+        WebsocketServer {
+            stream,
+            listener,
+        }
     }
 
     pub(crate) async fn send_message(&mut self, message: String) {
         let write = &mut self.stream;
-        write.send(Message::Text(message)).await.expect("Failed to send message");
+        match write.send(Message::Text(message)).await {
+            Ok(_) => {}
+            Err(e) => {println!("Failed to send message: {:?}", e); eprintln!("Failed to send message: {:?}", e)}
+        }
     }
 
     pub(crate) async fn listen(&mut self) {
