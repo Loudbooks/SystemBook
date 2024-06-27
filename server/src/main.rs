@@ -16,7 +16,10 @@ async fn main() {
     let basic_listener = Box::new(BasicListener {});
 
     while let Ok((stream, _)) = listener.accept().await {
-        let mut ws_server = WebsocketServer::new(stream, &basic_listener).await;
+        let mut ws_server = WebsocketServer::new(
+            tokio_tungstenite::accept_async(stream)
+                .await
+                .expect("Failed to accept connection"), &basic_listener).await;
 
         ws_server.listen().await;
     }
