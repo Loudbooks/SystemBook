@@ -49,22 +49,11 @@ impl ListHandler {
             interval.tick().await;
             let processes = gather_processes(&self.connection.lock().unwrap()).unwrap_or_default();
 
-			println!("Debug1");
-
             let mut last_checked_state = self.last_checked.lock().unwrap();
-            			println!("Debug2");
             *last_checked_state = tokio::time::Instant::now().elapsed().as_secs();
-			println!("Debug3");
 
 			let mut list_state = self.list.lock().unwrap();
-						println!("Debug4");
             *list_state = processes;
-            println!("debug5");
-
-            println!("Set list");
-            println!("debug6");
         }
     }
-
-    
 }

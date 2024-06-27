@@ -1,5 +1,6 @@
 use serde::Serialize;
 use systemctl::{AutoStartStatus, Unit};
+use crate::collectors::runtime_collector;
 
 
 #[derive(Serialize, Debug, Clone)]
@@ -20,10 +21,8 @@ impl Process {
         let enabled = unit.auto_start == AutoStartStatus::Enabled;
         let running = unit.is_active().unwrap_or(false);
         let memory = unit.memory.unwrap_or("None".to_string());
-        let time = unit.exec_start.unwrap_or("None".to_string());
         let cpu = unit.cpu.unwrap_or("None".to_string());
-
-        println!("{:?}", unit.pid);
+        let time = runtime_collector::get_process_runtime(unit.pid.unwrap_or(0) as i32).unwrap_or("None".to_string());
 
         Self {
             name,
