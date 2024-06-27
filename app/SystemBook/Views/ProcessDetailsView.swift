@@ -30,7 +30,7 @@ sd
     var body: some View {
         VStack {
             HStack() {
-                Text(process.title)
+                Text(process.name)
                     .font(Font.system(size: 35))
                     .fontWeight(.black)
                     .foregroundColor(.primary)
@@ -39,7 +39,7 @@ sd
                 Ellipse()
                     .foregroundColor(.clear)
                     .frame(width: 10, height: 10)
-                    .background(Color(red: 0.24, green: 0.82, blue: 0.03))
+                    .background(process.running ? Color(red: 0.24, green: 0.82, blue: 0.03) : .red)
                     .cornerRadius(23)
                     .padding(.trailing, 20)
                     .offset(x: 0, y: 2)
@@ -151,14 +151,14 @@ sd
                 .padding(30)
             }
             
-            HStack(spacing: 110) {
+            HStack(spacing: 90) {
                 VStack (spacing: 2){
                     Image(systemName: "cpu")
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
                         .font(.title)
-                    Text(process.cpu.description + "%")
+                    Text(process.cpu.description)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                        .font(.system(size: 15, weight: .regular, design: .default))
+                        .font(.system(size: 13, weight: .regular, design: .default))
                         .bold()
                 }
                 
@@ -168,7 +168,7 @@ sd
                         .font(.title)
                     Text(process.memory)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                        .font(.system(size: 15, weight: .regular, design: .default))
+                        .font(.system(size: 13, weight: .regular, design: .default))
                         .bold()
                 }
                 
@@ -176,9 +176,9 @@ sd
                     Image(systemName: "timer")
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
                         .font(.title)
-                    Text(process.runningTime)
+                    Text(process.time)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                        .font(.system(size: 15, weight: .regular, design: .default))
+                        .font(.system(size: 13, weight: .regular, design: .default))
                         .bold()
                 }
             }
@@ -202,6 +202,6 @@ sd
 #Preview {
     ProcessDetailsView(
         process:
-            Process(title: "systemd-process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h")
+            Process(name: "systemd-process", description: "Hello test", running: false, enabled: true, cpu: "10.1", memory: "10mb", time: "10h")
     )
 }

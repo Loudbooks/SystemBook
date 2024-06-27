@@ -6,31 +6,24 @@ struct ContentView: View {
     @State private var favorites = Favorites()
 
     @State private var searchText = ""
-
-    let exampleProcesses = [
-        Process(title: "Testing", description: "Descipriotn test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Huh", description: "aaa test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Another process", description: "asdasd test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Process4", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Process2", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Process1", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"),
-        Process(title: "Process3", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h")
-    ]
     
+    @StateObject private var websocketManager = WebsocketManager(address: "")
+
+
     var filteredProcesses: [Process] {
         if searchText.isEmpty {
-            return exampleProcesses
+            return websocketManager.processes
         } else {
-            return exampleProcesses.filter { $0.title.contains(searchText) || $0.description.contains(searchText) }
+            return websocketManager.processes.filter { $0.name.contains(searchText) || $0.description.contains(searchText) }
         }
         
     }
+        
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                let filteredFavorites = filteredProcesses.filter({ favorites.contains(id: $0.title) })
+                let filteredFavorites = filteredProcesses.filter({ favorites.contains(id: $0.name) })
                 ForEach(filteredFavorites) { process in
                     NavigationLink(destination: ProcessDetailsView(process: process)) {
                         ProcessCardView(process: process)
@@ -46,7 +39,7 @@ struct ContentView: View {
                     Divider().zIndex(-1)
                 }
                 
-                let unfavorated = filteredProcesses.filter({ !favorites.contains(id: $0.title) })
+                let unfavorated = filteredProcesses.filter({ !favorites.contains(id: $0.name) })
                 
                 withAnimation {
                     ForEach(unfavorated) { process in
