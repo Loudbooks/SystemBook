@@ -6,7 +6,7 @@ use tokio_tungstenite::WebSocketStream;
 
 pub(crate) struct WebsocketServer {
     stream: WebSocketStream<TcpStream>,
-    listener: Box<dyn WebsocketListener>
+    listener: &'static Box<dyn WebsocketListener>
 }
 
 #[async_trait]
@@ -15,7 +15,7 @@ pub trait WebsocketListener {
 }
 
 impl WebsocketServer {
-    pub(crate) async fn new(stream: TcpStream, listener: Box<dyn WebsocketListener>) -> Box<WebsocketServer> {
+    pub(crate) async fn new(stream: TcpStream, listener: &Box<dyn WebsocketListener>) -> Box<WebsocketServer> {
         let ws_stream = tokio_tungstenite::accept_async(stream).await.expect("Error during the websocket handshake");
         
         Box::new(WebsocketServer {

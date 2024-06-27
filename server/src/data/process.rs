@@ -46,7 +46,7 @@ impl Process {
         return if let Some(pos) = cpu.find('s') {
             if let Some(space_pos) = cpu[..pos].rfind(' ') {
                 let seconds_str = &cpu[space_pos + 1..pos];
-                let mut seconds: f64 = seconds_str.parse()?;
+                let mut seconds: f64 = seconds_str.parse().map_or(0.0, |x| x);
                 seconds = seconds.round();
                 let new_time_str = format!("{} {:.0}s", &cpu[..space_pos + 1], seconds);
                 new_time_str
