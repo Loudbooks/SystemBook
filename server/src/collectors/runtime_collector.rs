@@ -1,25 +1,37 @@
+use std::fs::File;
+use std::io;
+use std::io::Read;
 use procfs::process::Process;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-pub fn get_process_runtime(pid: i32) -> Option<String> {
+fn get_uptime() -> io::Result<f64> {
+    let mut file = File::open("/proc/uptime")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let uptime: f64 = contents.split_whitespace().next().unwrap().parse().unwrap();
+    Ok(uptime)
+}
+
+fn get_process_runtime(pid: i32) -> Option<u64> {
     if let Ok(process) = Process::new(pid) {
-        if let Ok(start_time) = process.stat.starttime() {
-            let uptime = procfs::kernel::uptime().unwrap_or_default().0;
-            let boot_time = SystemTime::now() - uptime;
-            let boot_time_secs = boot_time
-                .duration_since(UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_secs();
+        if let Ok(start_time) = process.stat().starttime() {
+            if let Ok(uptime) = get_uptime() {
+                let boot_time = SystemTime::now() - std::time::Duration::from_secs_f64(uptime);
+                let boot_time_secs = boot_time
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs();
 
-            let process_start_time = boot_time_secs + (start_time / procfs::ticks_per_second() as u64);
+                let process_start_time = boot_time_secs + (start_time / procfs::ticks_per_second());
 
-            let runtime = SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_secs()
-                - process_start_time;
+                let runtime = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs()
+                    - process_start_time;
 
-            return Some(format_runtime(runtime));
+                return Some(format_runtime(runtime));
+            }
         }
     }
     None
