@@ -72,7 +72,7 @@ struct ProcessCardView: View {
                         .font(.caption2)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                         .multilineTextAlignment(.leading)
-                }.padding(.leading, 30)
+                }.padding([.leading, .trailing], 30)
                 
                 Spacer()
                 

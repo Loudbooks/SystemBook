@@ -17,6 +17,8 @@
 		5E9171C92C2BC13B009ADA9D /* ProcessDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9171C82C2BC13B009ADA9D /* ProcessDetailsView.swift */; };
 		5E9171CB2C2C60D3009ADA9D /* SavedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9171CA2C2C60D3009ADA9D /* SavedDataManager.swift */; };
 		5EA3700D2C29D8B7004D309E /* ButtonPressActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA3700C2C29D8B7004D309E /* ButtonPressActions.swift */; };
+		5EE3F4E62C2E4FB500A04DC0 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 5EE3F4E52C2E4FB500A04DC0 /* Gzip */; };
+		5EE3F4EA2C2E53A700A04DC0 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE3F4E92C2E53A700A04DC0 /* LoadingView.swift */; };
 		5EFDF96A2C290EA800199928 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EFDF9692C290EA800199928 /* Assets.xcassets */; };
 		5EFDF96D2C290EA800199928 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EFDF96C2C290EA800199928 /* Preview Assets.xcassets */; };
 		5EFDF9772C290EA900199928 /* SystemBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFDF9762C290EA900199928 /* SystemBookTests.swift */; };
@@ -55,6 +57,7 @@
 		5E9171C82C2BC13B009ADA9D /* ProcessDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessDetailsView.swift; sourceTree = "<group>"; };
 		5E9171CA2C2C60D3009ADA9D /* SavedDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDataManager.swift; sourceTree = "<group>"; };
 		5EA3700C2C29D8B7004D309E /* ButtonPressActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPressActions.swift; sourceTree = "<group>"; };
+		5EE3F4E92C2E53A700A04DC0 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		5EFDF9622C290EA600199928 /* SystemBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SystemBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EFDF9692C290EA800199928 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EFDF96C2C290EA800199928 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -81,6 +84,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E67786B2C2C88880006EE54 /* SocketIO in Frameworks */,
+				5EE3F4E62C2E4FB500A04DC0 /* Gzip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,13 +105,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5E37538B2C2DC04900012141 /* DTO */ = {
+		5E37538B2C2DC04900012141 /* DataTransferObjects */ = {
 			isa = PBXGroup;
 			children = (
 				5E3753892C2DBFB500012141 /* ProcessListDTO.swift */,
 				5E37538C2C2DC06100012141 /* ProcessDTO.swift */,
 			);
-			path = DTO;
+			path = DataTransferObjects;
 			sourceTree = "<group>";
 		};
 		5E6778662C2C87DC0006EE54 /* Websocket */ = {
@@ -121,7 +125,7 @@
 		5E9171C52C2B4435009ADA9D /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				5E37538B2C2DC04900012141 /* DTO */,
+				5E37538B2C2DC04900012141 /* DataTransferObjects */,
 				5E6778662C2C87DC0006EE54 /* Websocket */,
 				5E9171C62C2B4440009ADA9D /* Process.swift */,
 				5E9171CA2C2C60D3009ADA9D /* SavedDataManager.swift */,
@@ -204,6 +208,7 @@
 			children = (
 				5EFDF9932C290F4900199928 /* ProcessCardView.swift */,
 				5E9171C82C2BC13B009ADA9D /* ProcessDetailsView.swift */,
+				5EE3F4E92C2E53A700A04DC0 /* LoadingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -243,6 +248,7 @@
 			name = SystemBook;
 			packageProductDependencies = (
 				5E67786A2C2C88880006EE54 /* SocketIO */,
+				5EE3F4E52C2E4FB500A04DC0 /* Gzip */,
 			);
 			productName = SystemBook;
 			productReference = 5EFDF9622C290EA600199928 /* SystemBook.app */;
@@ -322,6 +328,7 @@
 			mainGroup = 5EFDF9592C290EA600199928;
 			packageReferences = (
 				5E6778692C2C88880006EE54 /* XCRemoteSwiftPackageReference "socket" */,
+				5EE3F4E42C2E4FB500A04DC0 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = 5EFDF9632C290EA600199928 /* Products */;
 			projectDirPath = "";
@@ -385,6 +392,7 @@
 				5E6778682C2C87F00006EE54 /* WebsocketManager.swift in Sources */,
 				5E9171CB2C2C60D3009ADA9D /* SavedDataManager.swift in Sources */,
 				5EA3700D2C29D8B7004D309E /* ButtonPressActions.swift in Sources */,
+				5EE3F4EA2C2E53A700A04DC0 /* LoadingView.swift in Sources */,
 				5EFDF9902C290F1400199928 /* SystemBookApp.swift in Sources */,
 				5E6778652C2C6D850006EE54 /* Favorites.swift in Sources */,
 				5E37538A2C2DBFB500012141 /* ProcessListDTO.swift in Sources */,
@@ -772,6 +780,14 @@
 				kind = branch;
 			};
 		};
+		5EE3F4E42C2E4FB500A04DC0 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -779,6 +795,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E6778692C2C88880006EE54 /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
+		};
+		5EE3F4E52C2E4FB500A04DC0 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5EE3F4E42C2E4FB500A04DC0 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

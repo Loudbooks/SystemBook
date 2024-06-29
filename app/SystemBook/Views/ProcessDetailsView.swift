@@ -34,16 +34,16 @@ sd
                     .font(Font.system(size: 35))
                     .fontWeight(.black)
                     .foregroundColor(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.leading, 20)
-                    .frame(maxHeight: 25)
+                Spacer()
                 Ellipse()
                     .foregroundColor(.clear)
                     .frame(width: 10, height: 10)
                     .background(process.running ? Color(red: 0.24, green: 0.82, blue: 0.03) : .red)
                     .cornerRadius(23)
-                    .padding(.trailing, 20)
+                    .padding(.trailing, 30)
                     .offset(x: 0, y: 2)
-                Spacer()
             }
             
             HStack {

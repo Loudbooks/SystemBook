@@ -33,7 +33,7 @@ class Favorites {
     }
     
     func contains(id: String) -> Bool {
-        favorites.contains(id)
+        favorites.map() { $0.lowercased() }.contains(id.lowercased())
     }
     
     func list() -> Array<String> {

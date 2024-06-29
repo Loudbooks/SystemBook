@@ -3,49 +3,63 @@
 import Foundation
 import SocketIO
 import SwiftUI
+import Gzip
 
 class WebsocketManager: ObservableObject {
     private let manager: URLSessionWebSocketTask
     private let monitoringProcess: Process? = nil
     
     @Published var processes: [Process] = []
-    
+    @Published var isLoading: Bool = true
+
     typealias MessageCallback = (URLSessionWebSocketTask.Message) -> Void
     private var handlers: [MessageCallback] = []
     
     init(address: String) {
         self.manager = URLSession.shared.webSocketTask(with: URL(string: address)!)
         manager.resume()
-        
-        manager.receive(completionHandler: { result in
-            switch result {
-            case .success(let message):
-                self.notifyHandlers(data: message)
-            case .failure(let error):
-                print("Failed with error: " + error.localizedDescription)
-            }
-        })
+
+        listenForMessages()
         
         print("Intiation run")
         
         addMessageHandler { message in
             switch message {
-            case .string(let text):
-                let newProcessList = self.stringToProcess(input: text)
+            case .string(_):
+                return
+            case .data(let data):
+                let decompressedData = try! data.gunzipped()
+                let str = String(decoding: decompressedData, as: UTF8.self)
+
+                let newProcessList = self.stringToProcess(input: str)
                 
                 DispatchQueue.main.async {
                     self.processes = newProcessList
+
+                    withAnimation {
+                        self.isLoading = false
+                    }
                 }
-                return
-            case .data(_):
-                return
             @unknown default:
                 return
             }
-            
         }
         
-        sendString(message: "LIST")
+        Task {
+            await requestProcesses()
+        }
+    }
+    
+    func listenForMessages() {
+        manager.receive { result in
+            switch result {
+            case .success(let message):
+                self.notifyHandlers(data: message)
+                self.listenForMessages()
+            case .failure(let error):
+                print("Failed with error: " + error.localizedDescription)
+            }
+        }
     }
     
     func addMessageHandler(_ handler: @escaping MessageCallback) {
@@ -58,10 +72,8 @@ class WebsocketManager: ObservableObject {
         }
     }
     
-    func sendString(message: String) {
-        manager.send(URLSessionWebSocketTask.Message.string(message)) { _ in
-            
-        }
+    func sendString(message: String, completionHandler: @escaping ((any Error)?) -> Void) {
+        manager.send(URLSessionWebSocketTask.Message.string(message), completionHandler: completionHandler)
     }
     
     private func notifyHandlers(data: URLSessionWebSocketTask.Message) {
@@ -73,9 +85,17 @@ class WebsocketManager: ObservableObject {
     private func stringToProcess(input: String) -> [Process] {
         let data = input.data(using: .utf8)!
         let processListDTO: ProcessListDTO = try! JSONDecoder().decode(ProcessListDTO.self, from: data)
-                
+        
         return processListDTO.processes.map({
             Process.fromDTO(processDTO: $0)
         })
+    }
+    
+    func requestProcesses() async {
+        await withCheckedContinuation { continuation in
+            self.sendString(message: "LIST") { response in
+                continuation.resume()
+            }
+        }
     }
 }
