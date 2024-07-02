@@ -30,36 +30,38 @@ struct ProcessCardView: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text(process.title)
+                    Text(process.name)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                     Ellipse()
                         .foregroundColor(.clear)
                         .frame(width: 6, height: 6)
-                        .background(Color(red: 0.24, green: 0.82, blue: 0.03))
+                        .background(process.running ? Color(red: 0.24, green: 0.82, blue: 0.03) : .red)
                         .cornerRadius(23)
                         .padding(.trailing, 30)
                     Spacer()
                     Button {
-                        if favorites.contains(id: process.title) {
+                        if favorites.contains(id: process.name) {
                             withAnimation {
-                                favorites.remove(id: process.title)
+                                favorites.remove(id: process.name)
                             }
                         } else {
                             withAnimation {
-                                favorites.add(id: process.title)
+                                favorites.add(id: process.name)
                             }
                         }
                         
-                        executeButtonHaptics()
+                        let impactMed = UIImpactFeedbackGenerator(style: .light)
+                        impactMed.impactOccurred()
+                        
                     } label: {
-                        let glyph = favorites.contains(id: process.title) ? "star.fill" : "star"
+                        let glyph = favorites.contains(id: process.name) ? "star.fill" : "star"
                         
                         Image(systemName: glyph)
                             .padding(.trailing, 30)
-                            .symbolRenderingMode(favorites.contains(id: process.title) ? .multicolor : .monochrome)
-                            .foregroundStyle(.black)
+                            .symbolRenderingMode(favorites.contains(id: process.name) ? .multicolor : .monochrome)
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
                     }
                 }
                 .padding(.leading, 30)
@@ -69,36 +71,39 @@ struct ProcessCardView: View {
                     Text(process.description)
                         .font(.caption2)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                }.padding(.leading, 30)
+                        .multilineTextAlignment(.leading)
+                }.padding([.leading, .trailing], 30)
                 
                 Spacer()
                 
-                HStack(spacing: 20) {
-                    HStack (spacing: 2){
-                        Image(systemName: "cpu")
-                            .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
-                            .font(.caption2)
-                        Text(process.cpu.description + "%")
-                            .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                            .font(.system(size: 9, weight: .regular, design: .default))
-                    }
-                    
-                    HStack (spacing: 2){
-                        Image(systemName: "memorychip")
-                            .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
-                            .font(.caption2)
-                        Text(process.memory)
-                            .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                            .font(.system(size: 9, weight: .regular, design: .default))
-                    }
-                    
-                    HStack (spacing: 2){
-                        Image(systemName: "timer")
-                            .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
-                            .font(.caption2)
-                        Text(process.runningTime)
-                            .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
-                            .font(.system(size: 9, weight: .regular, design: .default))
+                HStack() {
+                    HStack(spacing: 20) {
+                        HStack (spacing: 2){
+                            Image(systemName: "cpu")
+                                .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
+                                .font(.caption2)
+                            Text(process.cpu)
+                                .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
+                                .font(.system(size: 9, weight: .regular, design: .default))
+                        }
+                        
+                        HStack (spacing: 2){
+                            Image(systemName: "memorychip")
+                                .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
+                                .font(.caption2)
+                            Text(process.memory)
+                                .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
+                                .font(.system(size: 9, weight: .regular, design: .default))
+                        }
+                        
+                        HStack (spacing: 2){
+                            Image(systemName: "timer")
+                                .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
+                                .font(.caption2)
+                            Text(process.time)
+                                .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
+                                .font(.system(size: 9, weight: .regular, design: .default))
+                        }
                     }
                     
                     Spacer()
@@ -161,6 +166,6 @@ struct ProcessCardView: View {
 
 #Preview {
     ProcessCardView(process:
-                        Process(title: "Process", description: "Hello test", running: false, enabled: true, cpu: 10.1, memory: "10mb", runningTime: "10h"))
+                        Process(name: "Process", description: "Hello test", running: false, enabled: true, cpu: "10m, 38s", memory: "625.6M", time: "6d, 21h"))
     .environment(Favorites())
 }
