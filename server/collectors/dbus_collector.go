@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/coreos/go-systemd/dbus"
 	"log"
+	"testing"
 )
 
-func collectProcesses() {
+func collectProcesses(t *testing.T) {
 	conn, err := dbus.New()
 	if err != nil {
 		log.Fatalf("Failed to connect to D-Bus: %v", err)
