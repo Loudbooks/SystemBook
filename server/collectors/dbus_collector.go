@@ -1,19 +1,20 @@
 package collectors
 
 import (
+	"context"
 	"fmt"
 	"github.com/coreos/go-systemd/v22/dbus"
 	"log"
 )
 
 func CollectProcesses() {
-	conn, err := dbus.NewWithContext(nil)
+	conn, err := dbus.NewWithContext(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to connect to D-Bus: %v", err)
 	}
 	defer conn.Close()
 
-	units, err := conn.ListUnitsContext(nil)
+	units, err := conn.ListUnitsContext(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to list units: %v", err)
 	}
