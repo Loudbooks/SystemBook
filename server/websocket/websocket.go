@@ -58,6 +58,7 @@ func (socket *WebSocket) endpoint(responseWriter http.ResponseWriter, request *h
 		fmt.Println(err)
 		return
 	}
+
 	defer func(connection *websocket.Conn) {
 		err := connection.Close()
 		if err != nil {
@@ -88,8 +89,6 @@ func (socket *WebSocket) endpoint(responseWriter http.ResponseWriter, request *h
 		fmt.Printf("Received with ID: %s\n", jsonMessage.Identifier)
 
 		response := socket.Listeners[jsonMessage.Identifier].HandleMessage(*jsonMessage, connection)
-
-		fmt.Println(response.ToJSON())
 
 		compressed, err := compressGzip(response.ToJSON())
 		if err != nil {

@@ -46,6 +46,7 @@ func collectProcesses() []data.Process {
 
 	for _, unit := range units {
 		pid, err := getPID(unit.Name)
+		unit.Name = unit.Name[:len(unit.Name)-8] // remove .service
 
 		if err != nil {
 			log.Printf("Failed to gather ID: %v\n", err)
@@ -55,9 +56,6 @@ func collectProcesses() []data.Process {
 
 		newProcess, err := process.NewProcess(pid)
 		if err != nil {
-			fmt.Println(unit.Name)
-			fmt.Println(err)
-
 			dataProcess := data.Process{
 				Name:        unit.Name,
 				Description: unit.Description,
@@ -147,6 +145,7 @@ func getPID(service string) (int32, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	return int32(pid), nil
 }
 
