@@ -89,7 +89,9 @@ func (socket *WebSocket) endpoint(responseWriter http.ResponseWriter, request *h
 
 		response := socket.Listeners[jsonMessage.Identifier].HandleMessage(*jsonMessage, connection)
 
-		compressed, err := compressGzip(response)
+		fmt.Println(response.ToJSON())
+
+		compressed, err := compressGzip(response.ToJSON())
 		if err != nil {
 			fmt.Println("Failed to compress message:", err)
 		}

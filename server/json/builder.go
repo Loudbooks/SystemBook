@@ -3,8 +3,8 @@ package json
 import "encoding/json"
 
 type Message struct {
-	Identifier string      `json:"identifier"`
-	Content    interface{} `json:"content"`
+	Identifier string `json:"identifier"`
+	Content    string `json:"content"`
 }
 
 func (message *Message) ToJSON() string {

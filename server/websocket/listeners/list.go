@@ -10,7 +10,7 @@ import (
 
 type ListListener struct{}
 
-func (l *ListListener) HandleMessage(_ json.Message, _ *websocket.Conn) string {
+func (l *ListListener) HandleMessage(_ json.Message, _ *websocket.Conn) json.Message {
 	data := map[string]interface{}{
 		"processes": collectors.Cached,
 	}
@@ -18,8 +18,14 @@ func (l *ListListener) HandleMessage(_ json.Message, _ *websocket.Conn) string {
 	outputJson, err := json2.Marshal(data)
 	if err != nil {
 		fmt.Println("Failed to parse JSON: ", err)
-		return ""
+		return json.Message{
+			Identifier: "LIST",
+			Content:    "",
+		}
 	}
 
-	return string(outputJson)
+	return json.Message{
+		Identifier: "LIST",
+		Content:    string(outputJson),
+	}
 }

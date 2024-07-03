@@ -55,6 +55,9 @@ func collectProcesses() []data.Process {
 
 		newProcess, err := process.NewProcess(pid)
 		if err != nil {
+			fmt.Println(unit.Name)
+			fmt.Println(err)
+
 			dataProcess := data.Process{
 				Name:        unit.Name,
 				Description: unit.Description,
@@ -81,8 +84,8 @@ func collectProcesses() []data.Process {
 				Running:     unit.ActiveState == "active",
 				Enabled:     unit.LoadState == "loaded",
 				Memory:      rss,
-				Time:        strconv.FormatFloat(math.Round(processCPU), 'f', -1, 64) + "%",
-				CPU:         humanReadable,
+				Time:        humanReadable,
+				CPU:         strconv.FormatFloat(math.Round(processCPU), 'f', -1, 64) + "%",
 			}
 
 			processesList = append(processesList, dataProcess)

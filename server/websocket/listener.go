@@ -6,5 +6,5 @@ import (
 )
 
 type Listener interface {
-	HandleMessage(message json.Message, connection *websocket.Conn) string
+	HandleMessage(message json.Message, connection *websocket.Conn) json.Message
 }
