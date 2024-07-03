@@ -56,61 +56,41 @@ sd
             .padding(.leading, 20)
             
             HStack(spacing: 22) {
-                if process.running {
-                    Button {} label: {
-                        Text("Stop")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
-                    .pressEvents {
-                        isButtonTapped = true
-                        executeButtonHaptics()
-                    } onRelease: {
-                        isButtonTapped = false
-                        executeButtonHaptics()
-                    }
-                } else {
-                    Button {} label: {
-                        Text("Start")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
-                    .pressEvents {
-                        isButtonTapped = true
-                        executeButtonHaptics()
-                    } onRelease: {
-                        isButtonTapped = false
-                        executeButtonHaptics()
-                    }
-                }
                 if process.enabled {
-                    Button {} label: {
+                    Button {
+                        executeButtonHaptics()
+                    } label: {
                         Text("Disable")
                             .font(.title3)
                             .fontWeight(.bold)
                     }
-                    .pressEvents {
-                        isButtonTapped = true
-                        executeButtonHaptics()
-                    } onRelease: {
-                        isButtonTapped = false
-                        executeButtonHaptics()
-                    }
                 } else {
-                    Button {} label: {
+                    Button {
+                        executeButtonHaptics()
+                    } label: {
                         Text("Enable")
                             .font(.title3)
                             .fontWeight(.bold)
                     }
-                    .pressEvents {
-                        isButtonTapped = true
-                        executeButtonHaptics()
-                    } onRelease: {
-                        isButtonTapped = false
-                        executeButtonHaptics()
-                    }
                 }
                 
+                if process.running {
+                    Button {
+                        executeButtonHaptics()
+                    } label: {
+                        Text("Stop")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
+                } else {
+                    Button {
+                        executeButtonHaptics()
+                    } label: {
+                        Text("Start")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
+                }
                 Spacer()
             }
             .padding(.leading, 20)

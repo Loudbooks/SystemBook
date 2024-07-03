@@ -7,14 +7,14 @@ struct ContentView: View {
     
     @State private var searchText = ""
     
-    @StateObject private var websocketManager = WebsocketManager(address: "")
+    @StateObject private var websocketManager = WebsocketManager(address: "ws://64e9-72-79-51-92.ngrok-free.app/ws")
 
 
     var filteredProcesses: [Process] {
         let array = if searchText.isEmpty {
             websocketManager.processes
         } else {
-            websocketManager.processes.filter { $0.name.contains(searchText) || $0.description.contains(searchText) }
+            websocketManager.processes.filter { $0.name.lowercased().contains(searchText.lowercased()) || $0.description.lowercased().contains(searchText.lowercased()) }
         }
         
         return array.sorted() { $0.name.lowercased() < $1.name.lowercased()}
@@ -67,7 +67,6 @@ struct ContentView: View {
                 .refreshable {
                     await websocketManager.requestProcesses()
                 }
-                .transition(.opacity)
             }
             .accentColor(.blue)
         }

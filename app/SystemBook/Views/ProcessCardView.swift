@@ -7,22 +7,23 @@ struct ProcessCardView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(Favorites.self) var favorites
-    
+        
     private var backgroundColor: Color {
-        if colorScheme == .dark {
-            return Color(.secondarySystemGroupedBackground)
-        } else {
-            return .white
-        }
+        return Color(.secondarySystemGroupedBackground)
+//        if colorScheme == .dark {
+//            return Color(.secondarySystemGroupedBackground)
+//        } else {
+//            return .white
+//        }
     }
     
     var body: some View {
         ZStack() {
             Rectangle()
                 .foregroundColor(.clear)
-                .frame(width: 372, height: 116)
+                .frame(width: 360, height: 116)
                 .background(backgroundColor)
-                .cornerRadius(23)
+                .cornerRadius(25)
                 .offset(x: 0, y: 0)
                 .shadow(
                     color: Color(red: 0, green: 0, blue: 0, opacity: 0.10), radius: 25.80
@@ -39,7 +40,7 @@ struct ProcessCardView: View {
                         .frame(width: 6, height: 6)
                         .background(process.running ? Color(red: 0.24, green: 0.82, blue: 0.03) : .red)
                         .cornerRadius(23)
-                        .padding(.trailing, 30)
+                        
                     Spacer()
                     Button {
                         if favorites.contains(id: process.name) {
@@ -59,12 +60,12 @@ struct ProcessCardView: View {
                         let glyph = favorites.contains(id: process.name) ? "star.fill" : "star"
                         
                         Image(systemName: glyph)
-                            .padding(.trailing, 30)
+                            .padding(.trailing, 40)
                             .symbolRenderingMode(favorites.contains(id: process.name) ? .multicolor : .monochrome)
                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                     }
                 }
-                .padding(.leading, 30)
+                .padding(.leading, 40)
                 .padding(.top, 17)
                 
                 HStack {
@@ -72,12 +73,12 @@ struct ProcessCardView: View {
                         .font(.caption2)
                         .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47))
                         .multilineTextAlignment(.leading)
-                }.padding([.leading, .trailing], 30)
+                }.padding([.leading, .trailing], 40)
                 
                 Spacer()
                 
                 HStack() {
-                    HStack(spacing: 20) {
+                    HStack(spacing: 15) {
                         HStack (spacing: 2){
                             Image(systemName: "cpu")
                                 .foregroundColor(Color(red: 0.47, green: 0.47, blue: 0.47, opacity: 0.8))
@@ -108,7 +109,7 @@ struct ProcessCardView: View {
                     
                     Spacer()
                     
-                    HStack(spacing: 22) {
+                    HStack(spacing: 18) {
                         if process.enabled {
                             Button {
                                 executeButtonHaptics()
@@ -144,9 +145,9 @@ struct ProcessCardView: View {
                                     .fontWeight(.bold)
                             }
                         }
-                    }.padding(.trailing, 30)
+                    }.padding(.trailing, 40)
                 }
-                .padding(.leading, 30)
+                .padding(.leading, 40)
                 .padding(.bottom, 17)
             }
             .padding([.top, .leading], 0)

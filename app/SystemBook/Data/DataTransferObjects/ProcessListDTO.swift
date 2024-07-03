@@ -3,6 +3,5 @@
 import Foundation
 
 struct ProcessListDTO: Decodable {
-    let checked: Int64
     let processes: [ProcessDTO]
 }

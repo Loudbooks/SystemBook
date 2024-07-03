@@ -30,15 +30,27 @@ class WebsocketManager: ObservableObject {
             case .data(let data):
                 let decompressedData = try! data.gunzipped()
                 let str = String(decoding: decompressedData, as: UTF8.self)
-
-                let newProcessList = self.stringToProcess(input: str)
                 
-                DispatchQueue.main.async {
-                    self.processes = newProcessList
+                let dto = self.stringToDTO(input: str)
+                if dto == nil {
+                    return
+                }
+                
+                let dtoFinal = dto!
+                
+                switch dtoFinal.identifier {
+                case "LIST":
+                    let newProcessList = self.stringToProcess(input: dtoFinal.content)
+                    
+                    DispatchQueue.main.async {
+                        self.processes = newProcessList
 
-                    withAnimation {
-                        self.isLoading = false
+                        withAnimation {
+                            self.isLoading = false
+                        }
                     }
+                default:
+                    return
                 }
             @unknown default:
                 return
@@ -72,14 +84,22 @@ class WebsocketManager: ObservableObject {
         }
     }
     
-    func sendString(message: String, completionHandler: @escaping ((any Error)?) -> Void) {
-        manager.send(URLSessionWebSocketTask.Message.string(message), completionHandler: completionHandler)
+    func sendString(identifier: String, message: String, completionHandler: @escaping ((any Error)?) -> Void) {
+        let dto = DataTransferObject(identifier: identifier, content: message)
+        let jsonString = try! JSONEncoder().encode(dto)
+        let compressedData = try! jsonString.gzipped()
+
+        manager.send(URLSessionWebSocketTask.Message.data(compressedData), completionHandler: completionHandler)
     }
     
     private func notifyHandlers(data: URLSessionWebSocketTask.Message) {
         for handler in handlers {
             handler(data)
         }
+    }
+    
+    private func stringToDTO(input: String) -> DataTransferObject? {
+        return DataTransferObject.fromJSON(input)
     }
     
     private func stringToProcess(input: String) -> [Process] {
@@ -93,7 +113,7 @@ class WebsocketManager: ObservableObject {
     
     func requestProcesses() async {
         await withCheckedContinuation { continuation in
-            self.sendString(message: "LIST") { response in
+            self.sendString(identifier: "LIST", message: "") { response in
                 continuation.resume()
             }
         }

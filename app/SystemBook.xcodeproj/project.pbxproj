@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5E37538A2C2DBFB500012141 /* ProcessListDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3753892C2DBFB500012141 /* ProcessListDTO.swift */; };
 		5E37538D2C2DC06100012141 /* ProcessDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E37538C2C2DC06100012141 /* ProcessDTO.swift */; };
+		5E587BFF2C34F29A00B32373 /* DataTransferObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E587BFE2C34F29A00B32373 /* DataTransferObject.swift */; };
 		5E6778652C2C6D850006EE54 /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6778642C2C6D850006EE54 /* Favorites.swift */; };
 		5E6778682C2C87F00006EE54 /* WebsocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6778672C2C87F00006EE54 /* WebsocketManager.swift */; };
 		5E67786B2C2C88880006EE54 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 5E67786A2C2C88880006EE54 /* SocketIO */; };
@@ -49,6 +50,7 @@
 /* Begin PBXFileReference section */
 		5E3753892C2DBFB500012141 /* ProcessListDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessListDTO.swift; sourceTree = "<group>"; };
 		5E37538C2C2DC06100012141 /* ProcessDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessDTO.swift; sourceTree = "<group>"; };
+		5E587BFE2C34F29A00B32373 /* DataTransferObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferObject.swift; sourceTree = "<group>"; };
 		5E6778642C2C6D850006EE54 /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
 		5E6778672C2C87F00006EE54 /* WebsocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManager.swift; sourceTree = "<group>"; };
 		5E6778722C2CA5C80006EE54 /* Unit Testing.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit Testing.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +112,7 @@
 			children = (
 				5E3753892C2DBFB500012141 /* ProcessListDTO.swift */,
 				5E37538C2C2DC06100012141 /* ProcessDTO.swift */,
+				5E587BFE2C34F29A00B32373 /* DataTransferObject.swift */,
 			);
 			path = DataTransferObjects;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				5E6778682C2C87F00006EE54 /* WebsocketManager.swift in Sources */,
 				5E9171CB2C2C60D3009ADA9D /* SavedDataManager.swift in Sources */,
 				5EA3700D2C29D8B7004D309E /* ButtonPressActions.swift in Sources */,
+				5E587BFF2C34F29A00B32373 /* DataTransferObject.swift in Sources */,
 				5EE3F4EA2C2E53A700A04DC0 /* LoadingView.swift in Sources */,
 				5EFDF9902C290F1400199928 /* SystemBookApp.swift in Sources */,
 				5E6778652C2C6D850006EE54 /* Favorites.swift in Sources */,
