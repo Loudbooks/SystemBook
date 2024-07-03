@@ -89,16 +89,19 @@ func (socket *WebSocket) endpoint(responseWriter http.ResponseWriter, request *h
 		fmt.Printf("Received with ID: %s\n", jsonMessage.Identifier)
 
 		response := socket.Listeners[jsonMessage.Identifier].HandleMessage(*jsonMessage, connection)
+		SendMessage(response, connection)
+	}
+}
 
-		compressed, err := compressGzip(response.ToJSON())
-		if err != nil {
-			fmt.Println("Failed to compress message:", err)
-		}
+func SendMessage(message json.Message, conn *websocket.Conn) {
+	compressed, err := compressGzip(message.ToJSON())
+	if err != nil {
+		fmt.Println("Failed to compress message:", err)
+	}
 
-		err = connection.WriteMessage(websocket.BinaryMessage, compressed)
-		if err != nil {
-			return
-		}
+	err = conn.WriteMessage(websocket.BinaryMessage, compressed)
+	if err != nil {
+		return
 	}
 }
 
