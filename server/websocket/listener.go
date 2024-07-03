@@ -1,7 +1,10 @@
 package websocket
 
-import "SystemBook/json"
+import (
+	"SystemBook/json"
+	"github.com/gorilla/websocket"
+)
 
 type Listener interface {
-	HandleMessage(message json.Message, websocket *WebSocket)
+	HandleMessage(message json.Message, connection *websocket.Conn) string
 }

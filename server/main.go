@@ -1,7 +1,14 @@
 package main
 
-import "SystemBook/websocket"
+import (
+	"SystemBook/websocket"
+	"SystemBook/websocket/listeners"
+)
 
 func main() {
-	_ = websocket.New()
+	socket := websocket.New()
+
+	socket.RegisterListener("LIST", &listeners.ListListener{})
+
+	socket.Listen()
 }

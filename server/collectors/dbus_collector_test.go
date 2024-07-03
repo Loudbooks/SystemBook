@@ -1,7 +1,10 @@
 package collectors
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestDbusCollector(t *testing.T) {
-	CollectProcesses()
+	fmt.Println(CollectProcesses())
 }

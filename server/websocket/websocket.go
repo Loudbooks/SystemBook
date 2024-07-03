@@ -17,14 +17,19 @@ var websocketUpgrader = websocket.Upgrader{
 }
 
 type WebSocket struct {
-	Listeners []Listener
+	Listeners map[string]Listener
 }
 
 func New() *WebSocket {
-	socket := WebSocket{}
-	socket.prepareHTTP()
+	socket := WebSocket{
+		make(map[string]Listener),
+	}
 
 	return &socket
+}
+
+func (socket *WebSocket) Listen() {
+	socket.prepareHTTP()
 }
 
 func (socket *WebSocket) prepareHTTP() {
@@ -43,8 +48,8 @@ func (socket *WebSocket) prepareRoutes() {
 	http.HandleFunc("/ws", method)
 }
 
-func (socket *WebSocket) RegisterListener(listener Listener) {
-	socket.Listeners = append(socket.Listeners, listener)
+func (socket *WebSocket) RegisterListener(key string, listener Listener) {
+	socket.Listeners[key] = listener
 }
 
 func (socket *WebSocket) endpoint(responseWriter http.ResponseWriter, request *http.Request) {
@@ -82,8 +87,16 @@ func (socket *WebSocket) endpoint(responseWriter http.ResponseWriter, request *h
 
 		fmt.Printf("Received with ID: %s\n", jsonMessage.Identifier)
 
-		for _, listener := range socket.Listeners {
-			listener.HandleMessage(*jsonMessage, socket)
+		response := socket.Listeners[jsonMessage.Identifier].HandleMessage(*jsonMessage, connection)
+
+		compressed, err := compressGzip(response)
+		if err != nil {
+			fmt.Println("Failed to compress message:", err)
+		}
+
+		err = connection.WriteMessage(websocket.BinaryMessage, compressed)
+		if err != nil {
+			return
 		}
 	}
 }
@@ -110,4 +123,21 @@ func decompressGzip(data []byte) (string, error) {
 	}
 
 	return result.String(), nil
+}
+
+func compressGzip(data string) ([]byte, error) {
+	var buffer bytes.Buffer
+	gzipWriter := gzip.NewWriter(&buffer)
+
+	_, err := gzipWriter.Write([]byte(data))
+	if err != nil {
+		return nil, err
+	}
+
+	err = gzipWriter.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	return buffer.Bytes(), nil
 }
